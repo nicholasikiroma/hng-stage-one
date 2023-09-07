@@ -13,7 +13,9 @@ app.get("/api", (req, res) => {
 
   // check if request contains required params
   if (slack_name === null || track === null)
-    return res.json({ Error: "Request must contain slack name and track" });
+    return res
+      .status(403)
+      .json({ Error: "Request must contain slack name and track" });
 
   const data = {
     slack_name: slack_name,
@@ -21,9 +23,10 @@ app.get("/api", (req, res) => {
     utc_time: currentTime,
     track: track,
     github_file_url: null,
-    github_repo_url: null,
-    status_code: null,
+    github_repo_url: "https://github.com/nicholasikiroma/hng-stage-one",
+    status_code: res.statusCode.toString(),
   };
+
   res.json(data);
 });
 
