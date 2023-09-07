@@ -23,7 +23,7 @@ app.get("/api", (req, res) => {
   if (slack_name === null || track === null)
     return res.status(400).json({
       Error: "Request must contain slack name and track",
-      status_code: res.statusCode.toString(),
+      status_code: res.statusCode,
     });
 
   const data = {
@@ -34,7 +34,7 @@ app.get("/api", (req, res) => {
     github_file_url:
       "https://github.com/nicholasikiroma/hng-stage-one/blob/main/server.js",
     github_repo_url: "https://github.com/nicholasikiroma/hng-stage-one",
-    status_code: res.statusCode.toString(),
+    status_code: res.statusCode,
   };
 
   res.json(data);
