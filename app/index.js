@@ -5,15 +5,19 @@ import { format, addMinutes } from "date-fns";
 const app = express();
 app.use(cors());
 
-const currentDate = new Date();
-const dayOfWeek = format(currentDate, "EEEE");
+function getDate() {
+  const currentDate = new Date();
+  const dayOfWeek = format(currentDate, "EEEE");
 
-// Generate a random offset between -2 and 2
-const randomOffsetMinutes = Math.floor(Math.random() * 5) - 2;
+  // Generate a random offset between -2 and 2
+  const randomOffsetMinutes = Math.floor(Math.random() * 5) - 2;
 
-// Add the random offset to the current time
-const currentTime = addMinutes(currentDate, randomOffsetMinutes);
-const formattedTime = format(currentTime, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+  // Add the random offset to the current time
+  const currentTime = addMinutes(currentDate, randomOffsetMinutes);
+  const formattedTime = format(currentTime, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+  return { dayOfWeek, formattedTime };
+}
 
 app.get("/api", (req, res) => {
   const slack_name = req.query.slack_name || null;
@@ -25,6 +29,8 @@ app.get("/api", (req, res) => {
       Error: "Request must contain slack name and track",
       status_code: res.statusCode,
     });
+
+  const { dayOfWeek, formattedTime } = getDate();
 
   const data = {
     slack_name: slack_name,
