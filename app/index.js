@@ -1,20 +1,27 @@
 import express from "express";
 import cors from "cors";
-import { format, addMinutes } from "date-fns";
+import { format, utcToZonedTime } from "date-fns-tz";
 
 const app = express();
 app.use(cors());
+
+function getRandomOffsetMinutes(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 function getDate() {
   const currentDate = new Date();
   const dayOfWeek = format(currentDate, "EEEE");
 
   // Generate a random offset between -2 and 2
-  const randomOffsetMinutes = Math.floor(Math.random() * 5) - 2;
+  const randomOffsetMinutes = getRandomOffsetMinutes(-2, 2);
 
-  // Add the random offset to the current time
-  const currentTime = addMinutes(currentDate, randomOffsetMinutes);
-  const formattedTime = format(currentTime, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+  const currentTime = new Date(
+    currentDate.getTime() + randomOffsetMinutes * 60000
+  );
+
+  const utcTime = utcToZonedTime(currentTime, "UTC");
+  const formattedTime = format(utcTime, "yyyy-MM-dd'T'HH:mm:ss'Z'");
 
   return { dayOfWeek, formattedTime };
 }
